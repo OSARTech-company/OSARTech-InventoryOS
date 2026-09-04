@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Access | OSARtech InventoryOS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body class="login-page">
+    <main class="login-layout">
+        <section class="login-showcase" aria-label="InventoryOS introduction">
+            <a class="showcase-brand" href="{{ url_for('home') }}" aria-label="InventoryOS home">
+                <img src="{{ url_for('static', filename='images/main-logo.png') }}" alt="">
+                <span>OSARtech InventoryOS</span>
+            </a>
+            <div class="showcase-content">
+                <img class="showcase-logo" src="{{ url_for('static', filename='images/main-logo.png') }}" alt="InventoryOS by OSARtech">
+                <h1>Set your business up for better control.</h1>
+                <p>Request a workspace and start managing stock, sales, suppliers, and reports from one place.</p>
+            </div>
+        </section>
+
+        <section class="login-panel" aria-labelledby="request-access-title">
+            <div class="login-form-wrap">
+                <p class="login-kicker">START WITH INVENTORYOS</p>
+                <h2 id="request-access-title">Request access</h2>
+                <p class="login-intro">Tell us a little about your business. Our team will review your request and contact you.</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                        <p class="login-message {{ category }}" role="alert">{{ message }}</p>
+                    {% endfor %}
+                {% endwith %}
+
+                <form class="login-form" action="{{ url_for('request_access') }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <label for="full_name">Full name</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ fields.full_name if fields else '' }}" autocomplete="name" required>
+
+                    <label for="business_name">Business name</label>
+                    <input type="text" id="business_name" name="business_name" value="{{ fields.business_name if fields else '' }}" autocomplete="organization" required>
+
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" value="{{ fields.email if fields else '' }}" autocomplete="email" required>
+
+                    <label for="phone">Phone number <span class="field-optional">(optional)</span></label>
+                    <input type="tel" id="phone" name="phone" value="{{ fields.phone if fields else '' }}" autocomplete="tel">
+
+                    <button type="submit" class="login-btn">Send request <span aria-hidden="true">&#8594;</span></button>
+                </form>
+
+                <div class="login-help">
+                    <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

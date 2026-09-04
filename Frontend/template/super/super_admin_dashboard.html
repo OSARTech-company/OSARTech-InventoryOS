@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard | InventoryOS</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dashboard.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <a class="brand" href="{{ url_for('super_admin_dashboard') }}">
+                <img src="{{ url_for('static', filename='images/inventoryos-logo.png') }}" alt="InventoryOS">
+                <span>InventoryOS<small>SUPER ADMIN</small></span>
+            </a>
+            <nav aria-label="Admin navigation">
+                <a class="nav-link active" href="{{ url_for('super_admin_dashboard') }}"><i class="fa-solid fa-grid-2"></i> Overview</a>
+                <a class="nav-link" href="{{ url_for('super_admin_view_user') }}"><i class="fa-solid fa-users"></i> Users</a>
+                <a class="nav-link" href="{{ url_for('admin_requests') }}"><i class="fa-solid fa-user-clock"></i> Access requests{% if overview.pending_onboarding_requests %}<b>{{ overview.pending_onboarding_requests }}</b>{% endif %}</a>
+                <a class="nav-link" href="{{ url_for('super_admin_add_user') }}"><i class="fa-solid fa-user-plus"></i> Add user</a>
+                <a class="nav-link" href="{{ url_for('admin_issues') }}"><i class="fa-solid fa-bug"></i> Issue reports</a>
+            </nav>
+            <form class="logout-form" method="post" action="{{ url_for('logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
+            </form>
+        </aside>
+        <main class="dashboard-main">
+            <header class="topbar">
+                <div><p class="eyebrow">SYSTEM OVERVIEW</p><h1>Good to see you, Admin.</h1><p class="last-login">Last sign-in: {{ last_login_at }}</p></div>
+                <a class="button button-primary" href="{{ url_for('admin_requests') }}"><i class="fa-solid fa-user-check"></i> Review requests</a>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="notice {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+            <section class="metrics" aria-label="User metrics">
+                <article class="metric-card metric-primary"><span class="metric-icon"><i class="fa-solid fa-building"></i></span><p>Business owners</p><strong>{{ overview.total_users }}</strong><small>All registered owner accounts</small></article>
+                <article class="metric-card"><span class="metric-icon icon-green"><i class="fa-solid fa-circle-check"></i></span><p>Active accounts</p><strong>{{ overview.active_users }}</strong><small>Available to sign in</small></article>
+                <article class="metric-card"><span class="metric-icon icon-amber"><i class="fa-solid fa-lock"></i></span><p>Locked accounts</p><strong>{{ overview.inactive_users }}</strong><small>Temporarily unavailable</small></article>
+                <article class="metric-card"><span class="metric-icon icon-violet"><i class="fa-solid fa-inbox"></i></span><p>Pending requests</p><strong>{{ overview.pending_onboarding_requests }}</strong><small>Awaiting your review</small></article>
+            </section>
+            <section class="content-grid">
+                <article class="panel attention-panel">
+                    <div class="panel-heading"><div><p class="eyebrow">ACTION CENTRE</p><h2>Access requests</h2></div><span class="status-pill">{{ overview.pending_onboarding_requests }} pending</span></div>
+                    <div class="attention-content"><span class="large-icon"><i class="fa-solid fa-user-clock"></i></span><div>{% if overview.pending_onboarding_requests %}<h3>New businesses are waiting for access.</h3><p>Review each request, then approve or reject it securely.</p><a class="text-link" href="{{ url_for('admin_requests') }}">Open access requests <i class="fa-solid fa-arrow-right"></i></a>{% else %}<h3>Your request queue is clear.</h3><p>New business access requests will appear here when they arrive.</p>{% endif %}</div></div>
+                </article>
+                <article class="panel quick-panel">
+                    <div class="panel-heading"><div><p class="eyebrow">QUICK ACTIONS</p><h2>Manage InventoryOS</h2></div></div>
+                    <a class="quick-action" href="{{ url_for('super_admin_add_user') }}"><span class="quick-icon"><i class="fa-solid fa-user-plus"></i></span><span><strong>Add a business owner</strong><small>Create an owner account directly.</small></span><i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="quick-action" href="{{ url_for('admin_requests') }}"><span class="quick-icon"><i class="fa-solid fa-list-check"></i></span><span><strong>Review onboarding</strong><small>Approve or reject access requests.</small></span><i class="fa-solid fa-chevron-right"></i></a>
+                </article>
+            </section>
+            <footer class="dashboard-footer"><span>Signed in as {{ email }}</span><span>InventoryOS administration</span></footer>
+        </main>
+    </div>
+</body>
+</html>

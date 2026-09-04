@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/owner-mobile.css') }}">
+<input class="sidebar-toggle" id="sidebar-toggle" type="checkbox" aria-label="Open navigation menu">
+<label class="mobile-menu-button" for="sidebar-toggle"><i class="fa-solid fa-bars"></i><span>Menu</span></label>
+<aside class="owner-sidebar">
+    <a class="owner-brand" href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='images/inventoryos-logo.png') }}" alt="InventoryOS"><span>InventoryOS<small>BUSINESS PORTAL</small></span></a>
+    <nav aria-label="Owner navigation">
+        <a class="owner-nav{% if active_page == 'dashboard' %} active{% endif %}" href="{{ url_for('dashboard') }}"><i class="fa-solid fa-grid-2"></i> Overview</a>
+        <a class="owner-nav{% if active_page == 'products' %} active{% endif %}" href="{{ url_for('products') }}"><i class="fa-solid fa-boxes-stacked"></i> Products</a>
+        <a class="owner-nav{% if active_page == 'stock_movements' %} active{% endif %}" href="{{ url_for('stock_movements') }}"><i class="fa-solid fa-right-left"></i> Stock movements</a>
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'sales' %} active{% endif %}" href="{{ url_for('sales_dashboard') }}"><i class="fa-solid fa-chart-line"></i> Sales</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'purchases' %} active{% endif %}" href="{{ url_for('purchases') }}"><i class="fa-solid fa-truck"></i> Purchases</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'supplier_payables' %} active{% endif %}" href="{{ url_for('supplier_payables') }}"><i class="fa-solid fa-hand-holding-dollar"></i> Supplier balances</a>{% endif %}
+        {% if user_role in ('owner', 'manager', 'salesperson') %}<a class="owner-nav{% if active_page == 'customers' %} active{% endif %}" href="{{ url_for('customers') }}"><i class="fa-solid fa-user-group"></i> Customers</a>{% endif %}
+        {% if user_role in ('owner', 'manager', 'salesperson') %}<a class="owner-nav{% if active_page == 'credit' %} active{% endif %}" href="{{ url_for('customer_credit') }}"><i class="fa-solid fa-hand-holding-dollar"></i> Customer credit</a>{% endif %}
+        <a class="owner-nav{% if active_page == 'checkout' %} active{% endif %}" href="{{ url_for('checkout') }}"><i class="fa-solid fa-cash-register"></i> Checkout</a>
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'reports' %} active{% endif %}" href="{{ url_for('reports') }}"><i class="fa-solid fa-chart-pie"></i> Reports</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'expenses' %} active{% endif %}" href="{{ url_for('expenses') }}"><i class="fa-solid fa-receipt"></i> Expenses</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'closing_stock' %} active{% endif %}" href="{{ url_for('closing_stock') }}"><i class="fa-solid fa-clipboard-check"></i> Closing stock</a>{% endif %}
+        {% if user_role == 'owner' %}<a class="owner-nav{% if active_page == 'stores' %} active{% endif %}" href="{{ url_for('stores') }}"><i class="fa-solid fa-store"></i> Stores</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'store_inventory' %} active{% endif %}" href="{{ url_for('store_inventory') }}"><i class="fa-solid fa-warehouse"></i> Store stock</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'low_stock' %} active{% endif %}" href="{{ url_for('low_stock') }}"><i class="fa-solid fa-triangle-exclamation"></i> Low-stock alerts</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'expiry' %} active{% endif %}" href="{{ url_for('expiry_alerts') }}"><i class="fa-solid fa-calendar-xmark"></i> Expiry alerts</a>{% endif %}
+        {% if user_role in ('owner', 'manager') %}<a class="owner-nav{% if active_page == 'transfers' %} active{% endif %}" href="{{ url_for('stock_transfers') }}"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transfers</a>{% endif %}
+        {% if user_role == 'owner' %}<a class="owner-nav{% if active_page == 'team' %} active{% endif %}" href="{{ url_for('team') }}"><i class="fa-solid fa-users"></i> Team</a>{% endif %}
+        {% if user_role == 'owner' %}<a class="owner-nav{% if active_page == 'settings' %} active{% endif %}" href="{{ url_for('business_settings') }}"><i class="fa-solid fa-building-gear"></i> Business settings</a>{% endif %}
+        <a class="owner-nav{% if active_page == 'help' %} active{% endif %}" href="{{ url_for('help_page') }}"><i class="fa-solid fa-circle-question"></i> Help centre</a>
+        <a class="owner-nav{% if active_page == 'report_issue' %} active{% endif %}" href="{{ url_for('report_issue') }}"><i class="fa-solid fa-bug"></i> Report an issue</a>
+    </nav>
+    <form class="owner-logout" action="{{ url_for('logout') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button></form>
+</aside>
+<label class="sidebar-backdrop" for="sidebar-toggle" aria-label="Close navigation menu"></label>

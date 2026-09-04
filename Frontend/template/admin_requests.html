@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Access Requests | InventoryOS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-management.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <a class="brand" href="{{ url_for('super_admin_dashboard') }}"><img src="{{ url_for('static', filename='images/inventoryos-logo.png') }}" alt="InventoryOS"><span>InventoryOS<small>SUPER ADMIN</small></span></a>
+            <nav aria-label="Admin navigation">
+                <a class="nav-link" href="{{ url_for('super_admin_dashboard') }}"><i class="fa-solid fa-grid-2"></i> Overview</a>
+                <a class="nav-link" href="{{ url_for('super_admin_view_user') }}"><i class="fa-solid fa-users"></i> Users</a>
+                <a class="nav-link active" href="{{ url_for('admin_requests') }}"><i class="fa-solid fa-user-clock"></i> Access requests</a>
+                <a class="nav-link" href="{{ url_for('super_admin_add_user') }}"><i class="fa-solid fa-user-plus"></i> Add user</a>
+            </nav>
+            <form class="logout-form" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button></form>
+        </aside>
+        <main class="dashboard-main management-main">
+            <header class="requests-header"><div><p class="eyebrow">ONBOARDING</p><h1>Access requests</h1><p>Review incoming business access requests.</p></div><a class="button button-primary" href="{{ url_for('super_admin_add_user') }}"><i class="fa-solid fa-user-plus"></i> Add user directly</a></header>
+            {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="notice {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+            <section class="request-metrics"><span><strong>{{ stats.active }}</strong> Active owners</span><span><strong>{{ stats.inactive }}</strong> Locked owners</span><span><strong>{{ stats.available }}</strong> Pending requests</span></section>
+            <section class="requests-panel">
+                {% if requests %}
+                    <div class="request-table-wrap"><table><thead><tr><th>Applicant</th><th>Business</th><th>Contact</th><th>Requested</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>{% for req in requests %}<tr><td><strong>{{ req.full_name }}</strong><small>{{ req.email }}</small></td><td>{{ req.business_name }}</td><td>{{ req.phone or '—' }}</td><td>{{ req.created_at.strftime('%d %b %Y') }}<small>{{ req.created_at.strftime('%I:%M %p') }}</small></td><td class="request-actions"><form action="{{ url_for('admin_handle_request', req_id=req.id, action='approve') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="approve" type="submit">Approve</button></form><form action="{{ url_for('admin_handle_request', req_id=req.id, action='reject') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="reject" type="submit">Reject</button></form></td></tr>{% endfor %}</tbody></table></div>
+                {% else %}
+                    <div class="empty-state"><span class="large-icon"><i class="fa-solid fa-inbox"></i></span><h2>No requests waiting</h2><p>When a business asks for access, its request will appear here.</p></div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

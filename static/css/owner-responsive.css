@@ -1,0 +1,15 @@
+@media (max-width: 700px) {
+    .owner-sidebar nav { grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); }
+    .owner-nav { min-height: 42px; white-space: nowrap; }
+    .owner-main.products-page { width: 100%; margin: 0; }
+    .products-page .back, .products-page .stock-link { min-height: 28px; }
+    .table-wrap, .request-table-wrap { -webkit-overflow-scrolling: touch; }
+    .movement-row { align-items: flex-start; }
+    .movement-row b { white-space: nowrap; }
+}
+@media (max-width: 420px) {
+    .owner-sidebar nav { grid-template-columns: repeat(2, 1fr); }
+    .header-actions, .header-actions a { width: 100%; }
+    .header-actions a { justify-content: center; }
+    .owner-metric strong { font-size: 27px; }
+}

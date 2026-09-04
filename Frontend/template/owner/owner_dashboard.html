@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | InventoryOS</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/owner-dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/owner-dashboard-alerts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/owner-available-stock.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head><body><div class="owner-shell">
+  {% include 'owner/_owner_sidebar.html' %}
+  <main class="owner-main"><header class="owner-header"><div>
+    <p class="eyebrow">{{ organisation_name or 'YOUR BUSINESS' }}</p><h1>Inventory overview</h1><p>Welcome back, {{ email }}.</p>
+  </div>{% if has_organisation %}<div class="header-actions"><a class="secondary-action" href="{{ url_for('products') }}"><i class="fa-solid fa-plus"></i> Add product</a><a class="primary-action" href="{{ url_for('stock_movements') }}"><i class="fa-solid fa-right-left"></i> Record stock</a></div>{% endif %}</header>
+  {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="notice {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+  {% if has_organisation %}<section class="owner-metrics">
+    <article class="owner-metric blue"><span><i class="fa-solid fa-boxes-stacked"></i></span><p>Products</p><strong>{{ overview.product_count }}</strong><small>Active catalogue items</small></article>
+    <article class="owner-metric"><span class="green"><i class="fa-solid fa-wallet"></i></span><p>Stock value</p><strong>{{ '%.2f'|format(overview.stock_value) }}</strong><small>Based on cost price</small></article>
+    <a class="owner-metric metric-link" href="{{ url_for('low_stock') }}"><span class="amber"><i class="fa-solid fa-triangle-exclamation"></i></span><p>Low-stock alerts</p><strong>{{ overview.low_stock_count }}</strong><small>Across active stores</small></a>
+  </section>
+  {% if low_stock_alerts %}<section class="dashboard-alert"><div><i class="fa-solid fa-triangle-exclamation"></i><strong>{{ overview.low_stock_count }} low-stock alert{{ '' if overview.low_stock_count == 1 else 's' }}</strong><span>{% for alert in low_stock_alerts[:2] %}{{ alert.product_name }} at {{ alert.store_name }}{% if not loop.last %}, {% endif %}{% endfor %}{% if overview.low_stock_count > 2 %}, and more{% endif %}.</span></div><a href="{{ url_for('low_stock') }}">Review alerts</a></section>{% endif %}
+  <section class="owner-grid"><article class="owner-panel"><div class="panel-title"><div><p class="eyebrow">ACTIVITY</p><h2>Recent movements</h2></div><a href="{{ url_for('stock_movements') }}">View ledger</a></div>{% if recent_movements %}<div class="movement-list">{% for movement in recent_movements %}<div class="movement-row"><span class="movement-icon {{ movement.movement_type }}"><i class="fa-solid fa-right-left"></i></span><div><strong>{{ movement.product_name }}</strong><small>{{ movement.movement_type|replace('_', ' ')|title }} &middot; {{ movement.created_at.strftime('%d %b, %I:%M %p') }}</small></div><b class="{% if movement.quantity_change < 0 %}negative{% else %}positive{% endif %}">{{ '+' if movement.quantity_change > 0 else '' }}{{ movement.quantity_change }} {{ movement.unit }}</b></div>{% endfor %}</div>{% else %}<div class="empty-card"><i class="fa-solid fa-clock-rotate-left"></i><h3>No activity yet</h3><p>Record stock in or a sale to begin your inventory history.</p><a href="{{ url_for('stock_movements') }}">Record stock movement</a></div>{% endif %}</article>
+  <article class="owner-panel available-stock-panel"><div class="panel-title"><div><p class="eyebrow">STOCK AT A GLANCE</p><h2>Available stock</h2></div><a href="{{ url_for('store_inventory') }}">View stores</a></div>{% if available_stock %}<div class="available-stock-list">{% for item in available_stock %}<div><span class="stock-product"><strong>{{ item.name }}</strong><small>{{ item.sku or 'No SKU' }}</small></span><b>{{ item.quantity }} <small>{{ item.unit }}</small></b></div>{% endfor %}</div>{% else %}<div class="empty-card"><i class="fa-solid fa-box-open"></i><h3>No stock yet</h3><p>Create a product or record stock in to begin.</p></div>{% endif %}</article>
+  <article class="owner-panel action-panel"><p class="eyebrow">QUICK START</p><h2>Keep stock accurate</h2><p>Use alerts to reorder before a store runs out, then record incoming stock.</p><a class="quick-link" href="{{ url_for('low_stock') }}"><i class="fa-solid fa-triangle-exclamation"></i> Review low-stock alerts <i class="fa-solid fa-arrow-right"></i></a><a class="quick-link" href="{{ url_for('stock_movements') }}"><i class="fa-solid fa-right-left"></i> Record movement <i class="fa-solid fa-arrow-right"></i></a></article></section>
+  {% else %}<section class="setup-warning"><i class="fa-solid fa-building-circle-exclamation"></i><h2>Your business is not set up yet</h2><p>Please contact an administrator to link your account to a business.</p></section>{% endif %}
+  </main>
+</div></body></html>

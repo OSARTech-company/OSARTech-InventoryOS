@@ -1,0 +1,348 @@
+<script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+    })();
+</script>
+<!-- Loading Overlay with Spinning Animation -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner-container">
+        <div class="loading-spinner-ring"></div>
+        <div class="loading-spinner-ring"></div>
+        <div class="loading-spinner-ring"></div>
+        <img src="{{ url_for('static', filename='images/inventoryos-logo.png', v='20260411b') }}" alt="OSARtech InventoryOS loading brand" class="loading-logo">
+    </div>
+    <p class="loading-text">Loading OSARtech InventoryOS...</p>
+</div>
+
+<style>
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 99999;
+        backdrop-filter: blur(2px);
+    }
+
+    [data-theme="dark"] .loading-overlay {
+        background: rgba(11, 15, 25, 0.96);
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .loading-overlay {
+            background: rgba(11, 15, 25, 0.96);
+        }
+    }
+
+    .loading-overlay.show {
+        display: flex;
+    }
+
+    .loading-spinner-container {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .loading-spinner-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 3px solid transparent;
+        border-radius: 50%;
+        box-sizing: border-box;
+    }
+
+    .loading-spinner-ring:nth-child(1) {
+        border-top-color: #0f4c81;
+        border-right-color: #0f4c81;
+        animation: spin-1 2s linear infinite;
+    }
+
+    .loading-spinner-ring:nth-child(2) {
+        border-right-color: #1f7a8c;
+        border-bottom-color: #1f7a8c;
+        width: 80%;
+        height: 80%;
+        top: 10%;
+        left: 10%;
+        animation: spin-2 1.8s linear infinite reverse;
+    }
+
+    .loading-spinner-ring:nth-child(3) {
+        border-bottom-color: #2a9ba8;
+        border-left-color: #2a9ba8;
+        width: 60%;
+        height: 60%;
+        top: 20%;
+        left: 20%;
+        animation: spin-3 1.6s linear infinite;
+    }
+
+    .loading-logo {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: contain;
+        border-radius: 50%;
+        background: white;
+        padding: 8px;
+        box-shadow: 0 4px 15px rgba(15, 76, 129, 0.2);
+        z-index: 10;
+    }
+
+    [data-theme="dark"] .loading-logo {
+        background: #161e2e;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .loading-logo {
+            background: #161e2e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    @keyframes spin-1 {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-2 {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-3 {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 16px;
+        color: #0f4c81;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: 1px;
+        animation: pulse-text 1.5s ease-in-out infinite;
+     }
+
+    [data-theme="dark"] .loading-text {
+        color: #38bdf8;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .loading-text {
+            color: #38bdf8;
+        }
+    }
+
+    @keyframes pulse-text {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+    }
+
+    /* Floating Global Theme Toggle Button */
+    .global-theme-toggle-btn {
+        position: fixed;
+        bottom: 80px;
+        left: 20px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+        color: #0f4c81;
+        border: 1px solid rgba(15, 76, 129, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        z-index: 99999;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .global-theme-toggle-btn:hover {
+        transform: translateY(-2px) rotate(15deg);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        background: #ffffff;
+        color: #1f7a8c;
+    }
+    [data-theme="dark"] .global-theme-toggle-btn {
+        background: rgba(22, 30, 46, 0.85);
+        color: #38bdf8;
+        border-color: rgba(56, 189, 248, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="dark"] .global-theme-toggle-btn:hover {
+        background: #161e2e;
+        color: #06b6d4;
+    }
+    @media (max-width: 768px) {
+        .global-theme-toggle-btn {
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+    }
+</style>
+
+<script>
+    // Show loading overlay on page start
+    let loadingTimeout = null;
+    function showLoadingOverlay() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.classList.add('show');
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            // Safety timeout: auto-hide the overlay after 10 seconds in case page does not unload (e.g. file downloads)
+            loadingTimeout = setTimeout(hideLoadingOverlay, 10000);
+        }
+    }
+
+    // Hide loading overlay when page is ready
+    function hideLoadingOverlay() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+        }
+        if (loadingTimeout) {
+            clearTimeout(loadingTimeout);
+            loadingTimeout = null;
+        }
+    }
+
+    // Show overlay when page starts loading
+    window.addEventListener('beforeunload', showLoadingOverlay);
+
+    // Hide overlay when page finishes loading
+    window.addEventListener('load', function() {
+        hideLoadingOverlay();
+    });
+
+    // Also hide after a short delay to ensure page is rendered
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(hideLoadingOverlay, 300);
+    });
+
+    // Show loading on form submission (for form pages)
+    document.addEventListener('submit', function(e) {
+        if (e.target && e.target.getAttribute) {
+            if (e.target.getAttribute('data-async-submit') === '1' || e.target.getAttribute('data-loading-skip') === '1' || e.target.getAttribute('data-no-loading') === '1') {
+                return;
+            }
+            const action = (e.target.getAttribute('action') || '').toLowerCase();
+            if (action.includes('export') || action.includes('download') || action.includes('print')) {
+                return;
+            }
+        }
+        if (e.target.method && e.target.method.toLowerCase() === 'post') {
+            showLoadingOverlay();
+        }
+    }, true);
+
+    // Show loading on link clicks (optional, for slower connections)
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.href.startsWith('#') && !link.target) {
+            const rawHref = (link.getAttribute('href') || '').trim();
+            const lowerHref = rawHref.toLowerCase();
+            const url = new URL(link.href, window.location.href);
+            const path = (url.pathname || '').toLowerCase();
+            const isDownloadOrExport =
+                link.hasAttribute('download') ||
+                path.includes('/download') ||
+                path.includes('download') ||
+                path.includes('/export') ||
+                path.includes('export') ||
+                path.includes('print') ||
+                /\.(pdf|csv|xlsx?|xls|zip|doc|docx|ppt|pptx|rtf|txt)($|\?|#)/i.test(lowerHref) ||
+                lowerHref.startsWith('blob:') ||
+                lowerHref.startsWith('data:');
+            
+            const skipLoading =
+                (link.dataset && (link.dataset.loadingSkip === '1' || link.dataset.noLoading === '1')) ||
+                isDownloadOrExport;
+            
+            if (skipLoading) {
+                return;
+            }
+            // Only show for internal navigation
+            if (link.href.includes(window.location.hostname)) {
+                showLoadingOverlay();
+            }
+        }
+    }, true);
+
+    // Global Theme Toggle Injector
+    document.addEventListener('DOMContentLoaded', function() {
+        // Skip on home and login pages to avoid duplicate toggles
+        if (document.getElementById('landing-theme-toggle') || document.getElementById('auth-theme-toggle')) {
+            return;
+        }
+        
+        // Skip if already exists
+        if (document.getElementById('global-theme-toggle')) {
+            return;
+        }
+
+        const btn = document.createElement('button');
+        btn.id = 'global-theme-toggle';
+        btn.className = 'global-theme-toggle-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', 'Toggle theme');
+        
+        const updateIcon = (theme) => {
+            if (theme === 'dark') {
+                btn.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                btn.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        };
+
+        const currentTheme = document.documentElement.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        updateIcon(currentTheme);
+        document.body.appendChild(btn);
+
+        btn.addEventListener('click', function() {
+            const activeTheme = document.documentElement.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+            if (newTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            updateIcon(newTheme);
+            window.dispatchEvent(new Event('theme-changed'));
+        });
+    });
+</script>
+
+{% if request.endpoint not in ['login', 'cbt_login', 'forgot_password'] %}
+{% include "shared/_premium_alerts.html" %}
+{% endif %}

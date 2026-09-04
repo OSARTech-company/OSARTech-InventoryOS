@@ -1,0 +1,2 @@
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS address TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS phone TEXT;

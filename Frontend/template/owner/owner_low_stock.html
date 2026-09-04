@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Low-stock alerts | InventoryOS</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/owner-dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/owner-low-stock.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head><body><div class="owner-shell">
+  {% include 'owner/_owner_sidebar.html' %}
+  <main class="owner-main low-stock-page">
+    <header class="owner-header"><div>
+      <p class="eyebrow">INVENTORY HEALTH</p><h1>Low-stock alerts</h1>
+      <p>Products at or below their reorder level in each active store.</p>
+    </div><a class="secondary-action" href="{{ url_for('store_inventory') }}"><i class="fa-solid fa-warehouse"></i> View store stock</a></header>
+    <section class="owner-panel alerts-panel">
+      <div class="panel-title"><div><p class="eyebrow">ACTION REQUIRED</p><h2>{{ alerts|length }} alert{{ '' if alerts|length == 1 else 's' }}</h2></div></div>
+      {% if alerts %}<div class="table-wrap"><table><thead><tr><th>Product</th><th>Store</th><th>Available</th><th>Reorder level</th><th>Status</th></tr></thead><tbody>
+        {% for alert in alerts %}<tr><td><strong>{{ alert.product_name }}</strong><small>{{ alert.sku or 'No SKU' }}</small></td><td><span class="store-pill">{{ alert.store_name }}</span></td><td class="quantity {% if alert.quantity == 0 %}out{% endif %}">{{ alert.quantity }} {{ alert.unit }}</td><td>{{ alert.low_stock_threshold }} {{ alert.unit }}</td><td>{% if alert.quantity == 0 %}<span class="status out">Out of stock</span>{% else %}<span class="status low">Low stock</span>{% endif %}</td></tr>{% endfor %}
+      </tbody></table></div>{% else %}<div class="empty-alerts"><i class="fa-solid fa-circle-check"></i><h2>All stock levels look healthy</h2><p>No active store is at or below a product’s reorder level.</p></div>{% endif %}
+    </section>
+  </main>
+</div></body></html>

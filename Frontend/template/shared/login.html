@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | OSARtech InventoryOS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body class="login-page">
+    <main class="login-layout">
+        <section class="login-showcase" aria-label="InventoryOS introduction">
+            <a class="showcase-brand" href="{{ url_for('home') }}" aria-label="InventoryOS home">
+                <img src="{{ url_for('static', filename='images/main-logo.png') }}" alt="">
+                <span>OSARtech InventoryOS</span>
+            </a>
+            <div class="showcase-content">
+                <img class="showcase-logo" src="{{ url_for('static', filename='images/main-logo.png') }}" alt="InventoryOS by OSARtech">
+                <h1>One place for your inventory.</h1>
+                <p>Manage products, sales, suppliers, and profitability with confidence.</p>
+                <ul>
+                    <li>Keep stock levels accurate and up to date</li>
+                    <li>Track purchases, sales, and customer activity</li>
+                    <li>Make decisions with clear business reports</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="login-panel" aria-labelledby="login-title">
+            <div class="login-form-wrap">
+                <p class="login-kicker">&#9889; WELCOME BACK TO INVENTORYOS</p>
+                <h2 id="login-title">Sign in</h2>
+                <p class="login-intro">Sign in with your work email and password to access your workspace.</p>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                        <p class="login-message {{ category }}" role="alert">{{ message }}</p>
+                    {% endfor %}
+                {% endwith %}
+                <form class="login-form" action="{{ url_for('login') }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" placeholder="you@business.com" autocomplete="email" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    <div class="login-options">
+                        <label class="remember-option" for="remember-me">
+                            <input type="checkbox" id="remember-me" name="remember_me">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="login-btn">Sign in <span aria-hidden="true">&#8594;</span></button>
+                </form>
+                <div class="login-help">
+                    <p>Need help? Contact your administrator for account support.</p>
+                    <p>New to InventoryOS? <a href="{{ url_for('request_access') }}">Request access</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

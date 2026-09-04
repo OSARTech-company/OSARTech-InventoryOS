@@ -1,0 +1,5 @@
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS logo_url TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS tax_number TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS receipt_footer TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS receipt_prefix TEXT NOT NULL DEFAULT 'S';

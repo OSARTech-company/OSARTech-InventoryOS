@@ -1,0 +1,1 @@
+.app-footer{display:flex;justify-content:space-between;gap:16px;margin:28px 0 0;padding:18px 0;color:#8a98ae;border-top:1px solid #e5eaf2;font:12px/1.5 Inter,system-ui,sans-serif}@media(max-width:700px){.app-footer{display:block}.app-footer span{display:block;margin:3px 0}}

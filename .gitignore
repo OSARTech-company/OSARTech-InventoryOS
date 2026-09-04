@@ -1,0 +1,4 @@
+.env
+Backend/inventoryos.db
+Backend/__pycache__/
+__pycache__/

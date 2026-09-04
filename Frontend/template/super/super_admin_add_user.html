@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Business Owner | InventoryOS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-management.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <a class="brand" href="{{ url_for('super_admin_dashboard') }}"><img src="{{ url_for('static', filename='images/inventoryos-logo.png') }}" alt="InventoryOS"><span>InventoryOS<small>SUPER ADMIN</small></span></a>
+            <nav aria-label="Admin navigation">
+                <a class="nav-link" href="{{ url_for('super_admin_dashboard') }}"><i class="fa-solid fa-grid-2"></i> Overview</a>
+                <a class="nav-link" href="{{ url_for('super_admin_view_user') }}"><i class="fa-solid fa-users"></i> Users</a>
+                <a class="nav-link" href="{{ url_for('admin_requests') }}"><i class="fa-solid fa-user-clock"></i> Access requests</a>
+                <a class="nav-link active" href="{{ url_for('super_admin_add_user') }}"><i class="fa-solid fa-user-plus"></i> Add user</a>
+            </nav>
+            <form class="logout-form" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button></form>
+        </aside>
+        <main class="dashboard-main management-main">
+            <a class="back-link" href="{{ url_for('super_admin_dashboard') }}"><i class="fa-solid fa-arrow-left"></i> Back to overview</a>
+            <header class="page-heading"><p class="eyebrow">OWNER MANAGEMENT</p><h1>Add a business owner</h1><p>Create an account and send the owner a secure password-setup link.</p></header>
+            {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="notice {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+            <section class="form-layout">
+                <form class="owner-form" method="post" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="business_name">Business name</label>
+                    <input id="business_name" name="business_name" type="text" value="{{ business_name }}" placeholder="Example Stores Ltd" autocomplete="organization" required>
+                    <label for="email">Business owner email</label>
+                    <input id="email" name="email" type="email" value="{{ email }}" placeholder="owner@business.com" autocomplete="email" required>
+                    <p class="field-help">The owner receives a one-time link to create their own password. No password is shown or stored by you.</p>
+                    <button class="button button-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Create and send invite</button>
+                </form>
+                <aside class="info-card"><span class="info-icon"><i class="fa-solid fa-shield-halved"></i></span><h2>Secure onboarding</h2><p>New owner accounts start without a known password. The setup link expires after seven days and can only be used once.</p></aside>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
